@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --default-color: #F6D8DC;
+        --heading-color: #FAE2E8;
+        --accent-color: #FAE2E8;
+        --dark-pink: #ef447a;
+        --light-pink: #FFF0F5;
+        --container-width: 320px;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, var(--light-pink) 0%, var(--accent-color) 50%, #ffd1dc 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60%;
+        background: linear-gradient(to top, rgba(239, 68, 122, 0.15), transparent);
+        clip-path: path('M0,150 C300,250 600,50 900,150 C1200,250 1500,50 1800,150 L1920,0 H0 Z');
+        animation: wave 7s infinite ease-in-out;
+        z-index: 0;
+      }
+
+      body::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 70%;
+        background: linear-gradient(to top, rgba(250, 226, 232, 0.2), transparent);
+        clip-path: path('M0,180 C350,100 700,200 1050,150 C1400,100 1750,200 1920,150 L1920,0 H0 Z');
+        animation: wave 9s infinite ease-in-out reverse;
+        z-index: 0;
+      }
+
+      @keyframes wave {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+      }
+
+      .login-container {
+        text-align: center;
+        width: var(--container-width);
+        position: relative;
+        z-index: 1;
+        padding: 18px;
+      }
+
+      .header {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 0.5rem; 
+        z-index: 1;
+      }
+
+      .login-container h2 {
+        margin-bottom: 0.75rem; 
+        font-weight: 700;
+        font-size: 22px;
+        color: #000;
+        line-height: 1.1;
+      }
+      .logo img {
+        width: 180px;
+        height: auto;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .logo:hover { transform: scale(1.05); }
+
+      .phone-wrap {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .country-select {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: 28px;
+        border: 1px solid #F7C1C8;
+        background: rgba(255,255,255,0.9);
+        min-width: 96px;
+        justify-content: center;
+      }
+
+      .country-select select {
+        border: none;
+        background: transparent;
+        font-size: 15px;
+        outline: none;
+      }
+
+      .phone-input {
+        flex: 1;
+        padding: 10px 14px;
+        border: 1px solid #F7C1C8;
+        border-radius: 28px;
+        background: rgba(255,255,255,0.9);
+        font-size: 15px;
+      }
+
+      .phone-input:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 10px rgba(250, 226, 232, 0.5);
+        outline: none;
+      }
+
+      button[type="submit"] {
+        margin-top: 0.75rem; /* Giảm từ 12px xuống 0.75rem */
+        border-radius: 25px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--dark-pink), #ff8aa0);
+        padding: 12px 0;
+        width: 100%;
+        border: none;
+        transition: transform .2s;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      button[type="submit"]:active { transform: translateY(1px); }
+
+      .links {
+        margin-top: 0.75rem; 
+        font-size: 0.9rem;
+        color: #000;
+      }
+
+      .links a { color: var(--dark-pink); text-decoration: none; margin-left: 6px; }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0.75rem 0; 
+      }
+
+      .divider::before, .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: rgba(0,0,0,0.08);
+      }
+
+      .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center; 
+        gap: 10px; 
+        padding: 12px 0;
+        border-radius: 25px;
+        width: 100%;
+        border: 1px solid rgba(0,0,0,0.1);
+        background: #fff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform .2s;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        margin-bottom: 0.75rem; 
+      }
+
+      .social-btn:active { transform: translateY(1px); }
+
+      .social-btn img { width: 22px; height: 22px; }
+
+      .error {
+        color: #c5304a;
+        font-size: 13px;
+        margin-top: 8px;
+        display: none;
+      }
+      @media (max-width: 420px) {
+        :root { --container-width: calc(100% - 32px); }
+        .login-container h2 { font-size: 20px; }
+        .logo img { width: 140px; }
+        .country-select { min-width: 88px; padding: 9px; }
+        .phone-input { padding: 10px; font-size: 15px; }
+        button[type="submit"] { padding: 12px; font-size: 15px; }
+        .social-btn { padding: 12px 0; font-size: 15px; border-radius: 24px; }
+      }
+
+      @media (min-width: 768px) {
+        .login-container { width: 360px; padding: 26px; }
+        .logo img { width: 200px; }
+        .login-container h2 { font-size: 24px; }
+        button[type="submit"] { font-size: 16px; }
+        .social-btn { font-size: 16px; }
+      }
+      @media (max-height: 520px) {
+        body { align-items: flex-start; padding-top: 18px; }
+      }
+    </style>
+</head>
+<body>
+    <div class="login-container" role="main" aria-labelledby="login-title">
+      <header class="header">
+        <a href="man3.html" class="logo" aria-label="Trang chủ">
+          <img src="logo.png" alt="Logo" class="logo-img">
+        </a>
+      </header>
+
+      <h2 id="login-title">Nhập số điện thoại để tiếp tục</h2>
+
+      <form id="loginForm" action="login.php" method="post" novalidate>
+        <div class="phone-wrap">
+          <div class="country-select" aria-hidden="false">
+            <select id="countryCode" name="countryCode" aria-label="Mã vùng">
+              <option value="+84" data-max="9">🇻🇳 +84</option>
+              <option value="+1" data-max="10">🇺🇸 +1</option>
+              <option value="+81" data-max="10">🇯🇵 +81</option>
+            </select>
+          </div>
+
+          <input
+            id="phone"
+            class="phone-input"
+            name="sdt"
+            type="tel"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            placeholder="Nhập số điện thoại"
+            autocomplete="tel"
+            maxlength="15"
+            required
+            aria-required="true"
+          >
+        </div>
+
+        <div id="errorMsg" class="error" role="alert">Vui lòng nhập số điện thoại hợp lệ.</div>
+
+        <button type="submit">Tiếp tục</button>
+
+        <p class="links">
+          <a href="quenmk.html">Quên mật khẩu?</a>
+        </p>
+        <p class="links">Chưa có tài khoản? <a href="register.html">Đăng ký</a></p>
+      </form>
+
+      <div class="divider"><span>Hoặc</span></div>
+
+      <button class="social-btn" id="fbBtn" aria-label="Đăng nhập bằng Facebook">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="">
+        Đăng nhập bằng Facebook
+      </button>
+
+      <button class="social-btn" id="ggBtn" aria-label="Đăng nhập bằng Google">
+        <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" alt="">
+        Đăng nhập bằng Google
+      </button>
+    </div>
+
+    <script>
+      (function () {
+        const phoneInput = document.getElementById('phone');
+        const countrySelect = document.getElementById('countryCode');
+        const form = document.getElementById('loginForm');
+        const errorMsg = document.getElementById('errorMsg');
+        phoneInput.addEventListener('input', (e) => {
+          const cleaned = e.target.value.replace(/\D/g, '');
+          if (e.target.value !== cleaned) {
+            e.target.value = cleaned;
+          }
+          if (cleaned.length > 1 && cleaned[0] === '0') {
+          }
+          if (cleaned.length > 0) errorMsg.style.display = 'none';
+        });
+        form.addEventListener('submit', (e) => {
+          const phone = phoneInput.value.trim();
+          const codeOption = countrySelect.selectedOptions[0];
+          const maxLen = parseInt(codeOption.dataset.max) || 9; 
+          if (!/^\d{7,15}$/.test(phone)) {
+            e.preventDefault();
+            errorMsg.textContent = 'Số điện thoại không hợp lệ. Vui lòng nhập từ 7 đến 15 chữ số.';
+            errorMsg.style.display = 'block';
+            phoneInput.focus();
+            return false;
+          }
+          let hidden = document.getElementById('fullNumber');
+          if (!hidden) {
+            hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = 'fullNumber';
+            hidden.id = 'fullNumber';
+            form.appendChild(hidden);
+          }
+          hidden.value = countrySelect.value + phone;
+        });
+        countrySelect.addEventListener('change', () => {
+          phoneInput.focus();
+        });
+
+        document.getElementById('fbBtn').addEventListener('click', () => {
+          window.location.href = 'oauth_facebook_url_or_handler';
+        });
+        document.getElementById('ggBtn').addEventListener('click', () => {
+          window.location.href = 'oauth_google_url_or_handler';
+        });
+      })();
+    </script>
+</body>
+</html>

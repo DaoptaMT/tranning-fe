@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ứng dụng Nhắn tin</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --accent: #FAE2E8;
+      --bg: #FFB6C1;
+      --text: #222;
+      --header-bg: rgba(255, 255, 255, 0.95);
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --icon-bg: rgba(0, 0, 0, 0.05);
+      --icon-default: #65676B;
+      --card-bg: #f0f2f5;
+      --bg-secondary: #f8e1f4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+      background: radial-gradient(circle at center, var(--bg) 0%, var(--bg-secondary) 50%, #fff 100%);
+      background-size: 200% 200%;
+      animation: gradientShift 15s ease-in-out infinite;
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: var(--header-bg);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      z-index: 1000;
+    }
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .logo img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      transition: transform 0.2s ease-in-out;
+    }
+    .logo:hover img {
+      transform: scale(1.05);
+    }
+    .search-bar {
+      flex: 0 0 500px;
+      margin: 0 10px;
+      position: relative;
+    }
+    .search-bar input {
+      width: 100%;
+      height: 36px;
+      padding: 0 12px;
+      border: none;
+      border-radius: 18px;
+      font-size: 14px;
+      outline: none;
+      background: var(--icon-bg);
+      color: var(--text);
+    }
+    .search-bar input::placeholder {
+      color: #999;
+    }
+    .navbar {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 120px;
+      padding: 0;
+    }
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: var(--icon-default);
+      font-size: 30px;
+      transition: background 0.2s, transform 0.2s, color 0.2s;
+      cursor: pointer;
+      position: relative;
+      padding-bottom: 4px;
+    }
+    .nav-icon:hover {
+      background: var(--icon-bg);
+      transform: scale(1.05);
+    }
+    .nav-icon.active {
+      color: var(--bg);
+    }
+    .nav-icon.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 2px;
+      background: var(--bg);
+      border-radius: 1px;
+    }
+    .badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: #e74c3c;
+      color: white;
+      font-size: 10px;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    .right-icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 30px;
+      margin-right: 10px;
+    }
+    .right-icons .nav-icon {
+      font-size: 30px;
+    }
+    .profile-pic {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--bg);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .profile-pic:hover {
+      transform: scale(1.05);
+    }
+    .dropdown {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      min-width: 250px;
+      z-index: 1001;
+      display: none;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      padding: 10px 0;
+      background: var(--header-bg);
+      backdrop-filter: blur(10px);
+    }
+    .dropdown.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .dropdown-item {
+      padding: 12px 20px;
+      font-size: 14px;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .dropdown-item:hover {
+      background: var(--bg);
+      color: white;
+    }
+    .dropdown-item:hover i {
+      color: white;
+    }
+    .dropdown-item i {
+      color: var(--icon-default);
+      font-size: 16px;
+    }
+    .main-content {
+      margin-top: 60px;
+      padding: 20px;
+      max-width: 1300px;
+      margin: 80px auto 20px;
+    }
+    .message-composer {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .card {
+      border-radius: 15px;
+      background: rgba(105, 13, 197, 0.103);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .card::before {
+      content: "";
+      height: 100px;
+      width: 100px;
+      position: absolute;
+      top: -40%;
+      left: -20%;
+      border-radius: 50%;
+      border: 35px solid rgba(255, 255, 255, 0.102);
+      transition: all .8s ease;
+      filter: blur(.5rem);
+    }
+    .card:hover::before {
+      width: 140px;
+      height: 140px;
+      top: -30%;
+      left: 50%;
+      filter: blur(0rem);
+    }
+    .image-upload {
+      border: 2px dashed var(--icon-default);
+      border-radius: 10px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .image-upload:hover {
+      border-color: var(--bg);
+    }
+    .image-upload input {
+      display: none;
+    }
+    .image-preview {
+      max-width: 100%;
+      max-height: 180px;
+      border-radius: 10px;
+      display: none;
+      margin: 0 auto;
+    }
+    .title-section input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: var(--icon-bg);
+      font-size: 16px;
+      color: var(--text);
+      outline: none;
+      margin-top: 10px;
+    }
+    .message-editor {
+      position: relative;
+    }
+    .formatting-toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .format-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--icon-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--icon-default);
+      font-size: 18px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .format-btn:hover {
+      background: var(--bg);
+      color: white;
+    }
+    .format-btn.active {
+      background: var(--bg);
+      color: white;
+    }
+    .message-textarea {
+      width: 100%;
+      min-height: 200px;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: var(--card-bg);
+      font-size: 16px;
+      color: var(--text);
+      outline: none;
+      resize: vertical;
+    }
+    .message-textarea b {
+      font-weight: bold;
+    }
+    .message-textarea i {
+      font-style: italic;
+    }
+    .message-textarea u {
+      text-decoration: underline;
+    }
+    .message-textarea ol {
+      margin-left: 20px;
+    }
+    .message-footer {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .footer-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--icon-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--icon-default);
+      font-size: 18px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .footer-btn:hover {
+      background: var(--bg);
+      color: white;
+    }
+    .action-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: var(--bg);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .action-btn:hover {
+      background: var(--accent);
+      transform: scale(1.05);
+    }
+    .action-btn.save {
+      background: var(--icon-bg);
+      color: var(--text);
+    }
+    .action-btn.save:hover {
+      background: var(--bg);
+      color: white;
+    }
+    .emoji-picker {
+      position: absolute;
+      bottom: 60px;
+      right: 10px;
+      background: var(--card-bg);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      padding: 10px;
+      display: none;
+      z-index: 1000;
+      max-width: 250px;
+    }
+    .emoji-picker.active {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+    }
+    .emoji {
+      font-size: 24px;
+      cursor: pointer;
+      padding: 5px;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .emoji:hover {
+      background: var(--bg);
+      border-radius: 5px;
+    }
+    .file-attachment {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--icon-bg);
+      padding: 10px;
+      border-radius: 10px;
+      display: none;
+    }
+    .file-attachment span {
+      margin-right: 10px;
+    }
+    .file-attachment .remove-file {
+      cursor: pointer;
+      color: #e74c3c;
+      font-size: 16px;
+    }
+    @media (max-width: 768px) {
+      body {
+        background: radial-gradient(circle at center, var(--bg) 0%, var(--bg-secondary) 50%, #fff 100%);
+        animation: none;
+      }
+      .header { padding: 0 5px; }
+      .search-bar { flex: 0 0 250px; margin: 0 5px; }
+      .navbar { 
+        flex: 1;
+        gap: 40px;
+        justify-content: center;
+      }
+      .nav-icon { width: 28px; height: 28px; font-size: 24px; }
+      .right-icons { 
+        gap: 10px; 
+        font-size: 24px;
+        margin-right: 5px;
+      }
+      .right-icons .nav-icon { font-size: 24px; }
+      .profile-pic { width: 28px; height: 28px; font-size: 24px; }
+      .badge { width: 14px; height: 14px; font-size: 9px; top: -2px; right: -2px; }
+      .dropdown {
+        min-width: 220px;
+        top: 40px;
+        right: 5px;
+        border-radius: 10px;
+        padding: 8px 0;
+      }
+      .dropdown-item {
+        padding: 10px 15px;
+      }
+      .main-content { 
+        padding: 15px;
+        max-width: calc(100% - 16px);
+        margin: 70px auto 15px;
+      }
+      .message-composer {
+        gap: 15px;
+      }
+      .card { padding: 15px; }
+      .image-upload { height: 160px; font-size: 14px; }
+      .image-preview { max-height: 140px; }
+      .title-section input { font-size: 14px; }
+      .message-textarea { min-height: 150px; font-size: 14px; }
+      .format-btn, .footer-btn { width: 36px; height: 36px; font-size: 16px; }
+      .action-btn { padding: 8px 16px; font-size: 14px; }
+      .emoji-picker {
+        max-width: 200px;
+        bottom: 50px;
+        right: 5px;
+      }
+      .emoji {
+        font-size: 20px;
+        padding: 4px;
+      }
+      .file-attachment {
+        font-size: 12px;
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo-section">
+      <div class="logo" onclick="goToHome()">
+        <img src="logo.png" alt="Logo">
+      </div>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Tìm kiếm tin nhắn...">
+    </div>
+    <nav class="navbar">
+    </nav>
+    <div class="right-icons">
+      <a href="hopthu.html" class="nav-icon" title="Hộp thư" onclick="handleTransition(event, 'hopthu.html')"><i class="fas fa-envelope"></i><span class="badge">2</span></a>
+      <a href="gift.html" class="nav-icon" title="Giỏ quà" id="cartIcon" onclick="handleTransition(event, 'gift.html')"><i class="fas fa-gift"></i><span class="badge" id="cartCount">0</span></a>
+      <div class="nav-icon" title="Thông báo" id="notificationIcon"><i class="fas fa-bell"></i><span class="badge">3</span></div>
+      <div class="profile-pic" title="Tài khoản" id="profileIcon">A</div>
+      <div class="dropdown" id="notificationDropdown">
+        <div class="dropdown-item"><i class="fas fa-truck"></i> Đơn hàng của bạn đang được giao bởi robot</div>
+        <div class="dropdown-item"><i class="fas fa-check-circle"></i> Giao hàng thành công</div>
+        <div class="dropdown-item"><i class="fas fa-bolt"></i> Xe điện mới được thêm vào đội giao hàng</div>
+      </div>
+      <div class="dropdown" id="profileDropdown">
+        <div class="dropdown-item"><i class="fas fa-user-edit"></i> Chỉnh sửa hồ sơ</div>
+        <div class="dropdown-item"><i class="fas fa-lock"></i> Đổi mật khẩu</div>
+        <div class="dropdown-item"><i class="fas fa-credit-card"></i> Thêm phương thức thanh toán</div>
+        <div class="dropdown-item"><i class="fas fa-cog"></i> Cài đặt tài khoản</div>
+        <div class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Đăng xuất</div>
+      </div>
+    </div>
+  </header>
+  <div class="main-content">
+    <div class="message-composer">
+      <div class="card">
+        <label class="image-upload" id="imageUpload">
+          <input type="file" accept="image/*" id="imageInput">
+          <span>Kéo & Thả hoặc Nhấn để Tải Hình ảnh</span>
+          <img class="image-preview" id="imagePreview" alt="Xem trước">
+        </label>
+      </div>
+      <div class="card title-section">
+        <input type="text" placeholder="Nhập tiêu đề tin nhắn...">
+      </div>
+      <div class="card message-editor">
+        <div class="formatting-toolbar">
+          <button class="format-btn" data-format="bold" onclick="formatText('bold', this)" title="In đậm"><i class="material-icons">format_bold</i></button>
+          <button class="format-btn" data-format="italic" onclick="formatText('italic', this)" title="In nghiêng"><i class="material-icons">format_italic</i></button>
+          <button class="format-btn" data-format="underline" onclick="formatText('underline', this)" title="Gạch dưới"><i class="material-icons">format_underlined</i></button>
+          <button class="format-btn" data-format="list" onclick="formatText('list', this)" title="Danh sách đánh số"><i class="material-icons">format_list_numbered</i></button>
+          <button class="format-btn" data-format="align-left" onclick="formatText('align-left', this)" title="Căn trái"><i class="material-icons">format_align_left</i></button>
+          <button class="format-btn" data-format="align-center" onclick="formatText('align-center', this)" title="Căn giữa"><i class="material-icons">format_align_center</i></button>
+          <button class="format-btn" data-format="align-right" onclick="formatText('align-right', this)" title="Căn phải"><i class="material-icons">format_align_right</i></button>
+          <button class="format-btn" onclick="startRecording()" title="Ghi âm"><i class="material-icons">mic</i></button>
+        </div>
+        <div contenteditable="true" class="message-textarea" id="messageText"></div>
+        <div class="file-attachment" id="fileAttachment">
+          <span id="fileName"></span>
+          <i class="fas fa-times remove-file" onclick="removeFile()"></i>
+        </div>
+        <div class="emoji-picker" id="emojiPicker">
+          <span class="emoji" onclick="insertEmoji('🚚')">🚚</span>
+          <span class="emoji" onclick="insertEmoji('📦')">📦</span>
+          <span class="emoji" onclick="insertEmoji('⚡️')">⚡️</span>
+          <span class="emoji" onclick="insertEmoji('😊')">😊</span>
+          <span class="emoji" onclick="insertEmoji('👍')">👍</span>
+          <span class="emoji" onclick="insertEmoji('🙌')">🙌</span>
+          <span class="emoji" onclick="insertEmoji('🎉')">🎉</span>
+          <span class="emoji" onclick="insertEmoji('🚀')">🚀</span>
+          <span class="emoji" onclick="insertEmoji('✅')">✅</span>
+          <span class="emoji" onclick="insertEmoji('📩')">📩</span>
+        </div>
+        <div class="message-footer">
+          <input type="file" id="fileInput" style="display: none;">
+          <button class="footer-btn" onclick="attachFile()" title="Đính kèm tệp"><i class="material-icons">attach_file</i></button>
+          <button class="footer-btn" onclick="openEmojiPicker()" title="Biểu tượng cảm xúc"><i class="material-icons">emoji_emotions</i></button>
+          <button class="footer-btn" onclick="clearMessage()" title="Xóa tin nhắn"><i class="material-icons">delete</i></button>
+          <button class="action-btn save" onclick="saveMessage()" title="Lưu tin nhắn">Lưu</button>
+          <button class="action-btn" onclick="sendMessage()" title="Gửi tin nhắn">Gửi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Hàm xử lý chuyển trang với hiệu ứng
+    function handleTransition(event, url) {
+      event.preventDefault();
+      document.body.classList.add('page-transition');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 300);
+    }
+
+    function goToHome() {
+      document.body.classList.add('page-transition');
+      setTimeout(() => {
+        window.location.href = 'man3.html';
+      }, 300);
+    }
+
+    const imageUpload = document.getElementById('imageUpload');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const messageText = document.getElementById('messageText');
+    const fileInput = document.getElementById('fileInput');
+    const fileAttachment = document.getElementById('fileAttachment');
+    const fileNameDisplay = document.getElementById('fileName');
+    const emojiPicker = document.getElementById('emojiPicker');
+    let isListActive = false;
+
+    // Xử lý Tải Hình ảnh
+    imageUpload.addEventListener('click', () => imageInput.click());
+    imageUpload.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      imageUpload.style.borderColor = 'var(--bg)';
+    });
+    imageUpload.addEventListener('dragleave', () => {
+      imageUpload.style.borderColor = 'var(--icon-default)';
+    });
+    imageUpload.addEventListener('drop', (e) => {
+      e.preventDefault();
+      imageUpload.style.borderColor = 'var(--icon-default)';
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          imagePreview.src = reader.result;
+          imagePreview.style.display = 'block';
+          imageUpload.querySelector('span').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    imageInput.addEventListener('change', () => {
+      const file = imageInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          imagePreview.src = reader.result;
+          imagePreview.style.display = 'block';
+          imageUpload.querySelector('span').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Xử lý Đính kèm Tệp
+    function attachFile() {
+      fileInput.click();
+    }
+
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (file) {
+        fileNameDisplay.textContent = file.name;
+        fileAttachment.style.display = 'flex';
+      }
+    });
+
+    function removeFile() {
+      fileInput.value = '';
+      fileNameDisplay.textContent = '';
+      fileAttachment.style.display = 'none';
+    }
+
+    // Xử lý Biểu tượng Cảm xúc
+    function openEmojiPicker() {
+      emojiPicker.classList.toggle('active');
+    }
+
+    function insertEmoji(emoji) {
+      const selection = window.getSelection();
+      if (!selection.rangeCount) {
+        messageText.innerHTML += emoji;
+        messageText.focus();
+        return;
+      }
+
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+      range.insertNode(document.createTextNode(emoji));
+      range.setStartAfter(document.createTextNode(emoji));
+      range.setEndAfter(document.createTextNode(emoji));
+      selection.removeAllRanges();
+      selection.addRange(range);
+      messageText.focus();
+      emojiPicker.classList.remove('active');
+    }
+
+    // Đóng emoji picker khi nhấp ra ngoài
+    document.addEventListener('click', (e) => {
+      if (!emojiPicker.contains(e.target) && !document.querySelector('.footer-btn[title="Biểu tượng cảm xúc"]').contains(e.target)) {
+        emojiPicker.classList.remove('active');
+      }
+    });
+
+    // Hàm Định dạng
+    function formatText(format, button) {
+      const selection = window.getSelection();
+      if (!selection.rangeCount) return;
+
+      const range = selection.getRangeAt(0);
+      const selectedText = range.toString();
+      const parentNode = range.commonAncestorContainer.parentNode;
+
+      // Chuyển đổi trạng thái hoạt động cho nút
+      const isActive = button.classList.contains('active');
+      button.classList.toggle('active', !isActive);
+
+      // Xử lý định dạng văn bản
+      if (format === 'bold' || format === 'italic' || format === 'underline') {
+        const tag = format === 'bold' ? 'b' : format === 'italic' ? 'i' : 'u';
+        if (isActive) {
+          // Xóa định dạng bằng cách bỏ thẻ
+          const parent = parentNode.closest(tag);
+          if (parent) {
+            const text = parent.textContent;
+            parent.replaceWith(document.createTextNode(text));
+          }
+        } else if (selectedText) {
+          // Áp dụng định dạng bằng cách bao quanh văn bản đã chọn
+          const element = document.createElement(tag);
+          range.surroundContents(element);
+        }
+      } else if (format === 'list') {
+        if (isListActive) {
+          // Xóa danh sách có thứ tự
+          const ol = parentNode.closest('ol');
+          if (ol) {
+            const items = ol.querySelectorAll('li');
+            items.forEach(item => {
+              const text = item.textContent;
+              ol.parentNode.insertBefore(document.createTextNode(text + '\n'), ol);
+            });
+            ol.remove();
+            isListActive = false;
+          }
+        } else if (selectedText) {
+          // Tạo danh sách có thứ tự
+          const ol = document.createElement('ol');
+          const li = document.createElement('li');
+          li.textContent = selectedText;
+          ol.appendChild(li);
+          range.deleteContents();
+          range.insertNode(ol);
+          isListActive = true;
+        }
+      } else if (format.startsWith('align-')) {
+        // Xử lý căn lề
+        const alignment = format.split('-')[1];
+        messageText.style.textAlign = isActive ? 'left' : alignment;
+        // Cập nhật trạng thái hoạt động cho các nút căn lề
+        document.querySelectorAll('.format-btn[data-format^="align-"]').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        if (!isActive) button.classList.add('active');
+      }
+
+      // Khôi phục tiêu điểm
+      messageText.focus();
+    }
+
+    // Cập nhật trạng thái nút dựa trên vị trí con trỏ
+    messageText.addEventListener('click', () => {
+      const selection = window.getSelection();
+      if (!selection.rangeCount) return;
+
+      const parentNode = selection.getRangeAt(0).commonAncestorContainer.parentNode;
+
+      // Cập nhật trạng thái nút in đậm, in nghiêng, gạch dưới
+      document.querySelectorAll('.format-btn[data-format="bold"], .format-btn[data-format="italic"], .format-btn[data-format="underline"]').forEach(btn => {
+        const tag = btn.dataset.format === 'bold' ? 'b' : btn.dataset.format === 'italic' ? 'i' : 'u';
+        btn.classList.toggle('active', parentNode.closest(tag) !== null);
+      });
+
+      // Cập nhật trạng thái nút danh sách
+      isListActive = parentNode.closest('ol') !== null;
+      document.querySelector('.format-btn[data-format="list"]').classList.toggle('active', isListActive);
+
+      // Cập nhật trạng thái nút căn lề
+      const computedAlign = window.getComputedStyle(messageText).textAlign;
+      document.querySelectorAll('.format-btn[data-format^="align-"]').forEach(btn => {
+        const align = btn.dataset.format.split('-')[1];
+        btn.classList.toggle('active', computedAlign === align);
+      });
+    });
+
+    // Hàm Placeholder
+    function startRecording() {
+      alert('Chức năng ghi âm chưa được triển khai.');
+    }
+
+    function clearMessage() {
+      messageText.innerHTML = '';
+      messageText.style.textAlign = 'left';
+      document.querySelectorAll('.format-btn').forEach(btn => btn.classList.remove('active'));
+      isListActive = false;
+      imagePreview.src = '';
+      imagePreview.style.display = 'none';
+      imageUpload.querySelector('span').style.display = 'block';
+      document.querySelector('.title-section input').value = '';
+      fileInput.value = '';
+      fileNameDisplay.textContent = '';
+      fileAttachment.style.display = 'none';
+      emojiPicker.classList.remove('active');
+    }
+
+    function saveMessage() {
+      const title = document.querySelector('.title-section input').value;
+      const content = messageText.innerHTML;
+      const file = fileInput.files[0];
+      const image = imagePreview.src ? imagePreview.src : null;
+      console.log('Saved Message:', { title, content, file: file ? file.name : null, image });
+      alert('Tin nhắn đã được lưu (chức năng placeholder).');
+    }
+
+    function sendMessage() {
+      const title = document.querySelector('.title-section input').value;
+      const content = messageText.innerHTML;
+      const file = fileInput.files[0];
+      const image = imagePreview.src ? imagePreview.src : null;
+      if (!content && !file && !image) {
+        alert('Vui lòng nhập nội dung hoặc đính kèm tệp/hình ảnh.');
+        return;
+      }
+      console.log('Sent Message:', { title, content, file: file ? file.name : null, image });
+      alert('Tin nhắn đã được gửi (chức năng placeholder).');
+      clearMessage();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Dropdown functionality for notification and profile
+      const notificationIcon = document.getElementById('notificationIcon');
+      const profileIcon = document.getElementById('profileIcon');
+      const notificationDropdown = document.getElementById('notificationDropdown');
+      const profileDropdown = document.getElementById('profileDropdown');
+
+      notificationIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        notificationDropdown.classList.toggle('active');
+        profileDropdown.classList.remove('active');
+      });
+
+      profileIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('active');
+        notificationDropdown.classList.remove('active');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!notificationIcon.contains(e.target) && !notificationDropdown.contains(e.target)) {
+          notificationDropdown.classList.remove('active');
+        }
+        if (!profileIcon.contains(e.target) && !profileDropdown.contains(e.target)) {
+          profileDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

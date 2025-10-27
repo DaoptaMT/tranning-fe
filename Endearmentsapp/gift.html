@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Menu Quà Tặng - Nơi Yêu Thương Được Nói Hộ</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #FAE2E8;
+      --bg: #FFB6C1;
+      --text: #222;
+      --header-bg: rgba(255, 255, 255, 0.95);
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --icon-bg: rgba(0, 0, 0, 0.05);
+      --icon-default: #65676B;
+      --card-bg: #f0f2f5;
+      --bg-secondary: #f8e1f4;
+      --sidebar-bg: linear-gradient(135deg, var(--bg) 0%, var(--bg-secondary) 100%);
+      --sidebar-accent: #fff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: "Roboto", Arial, sans-serif;
+      background: radial-gradient(circle at center, var(--bg) 0%, var(--bg-secondary) 50%, #fff 100%);
+      background-size: 200% 200%;
+      animation: gradientShift 15s ease-in-out infinite;
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+    body.fade-out {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: var(--header-bg);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      z-index: 1000;
+    }
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .logo img {
+      width: 3rem;
+      height: 3rem;
+      object-fit: contain;
+      transition: transform 0.2s ease-in-out;
+    }
+    .logo:hover img {
+      transform: scale(1.05);
+    }
+    .search-bar {
+      flex: 0 0 31.25rem;
+      margin: 0 0.625rem;
+      position: relative;
+    }
+    .search-bar input {
+      width: 100%;
+      height: 2.25rem;
+      padding: 0 0.75rem;
+      border: none;
+      border-radius: 1.125rem;
+      font-size: 0.875rem;
+      outline: none;
+      background: var(--icon-bg);
+      color: var(--text);
+    }
+    .search-bar input::placeholder {
+      color: #999;
+    }
+    .navbar {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7.5rem;
+      padding: 0;
+    }
+    .nav-icon {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: var(--icon-default);
+      font-size: 1.875rem;
+      transition: background 0.2s, transform 0.2s, color 0.2s;
+      cursor: pointer;
+      position: relative;
+      padding-bottom: 0.25rem;
+    }
+    .nav-icon:hover {
+      background: var(--icon-bg);
+      transform: scale(1.05);
+    }
+    .nav-icon.active {
+      color: var(--bg);
+    }
+    .nav-icon.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1.5rem;
+      height: 0.125rem;
+      background: var(--bg);
+      border-radius: 0.0625rem;
+    }
+    .badge {
+      position: absolute;
+      top: -0.125rem;
+      right: -0.125rem;
+      background: var(--bg);
+      color: white;
+      font-size: 0.625rem;
+      border-radius: 50%;
+      border: none;
+      width: 1rem;
+      height: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+    }
+    .right-icons {
+      display: flex;
+      align-items: center;
+      gap: 0.9375rem;
+      font-size: 1.875rem;
+      margin-right: 0.625rem;
+    }
+    .right-icons .nav-icon {
+      font-size: 1.875rem;
+    }
+    .profile-pic {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--bg);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .profile-pic:hover {
+      transform: scale(1.05);
+    }
+    .dropdown {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      min-width: 250px;
+      z-index: 1001;
+      display: none;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      padding: 10px 0;
+      background: var(--header-bg);
+      backdrop-filter: blur(10px);
+    }
+    .dropdown.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .dropdown-item {
+      padding: 12px 20px;
+      font-size: 14px;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .dropdown-item:hover {
+      background: var(--bg);
+      color: white;
+    }
+    .dropdown-item:hover i {
+      color: white;
+    }
+    .dropdown-item i {
+      color: var(--icon-default);
+      font-size: 16px;
+    }
+    .main-content {
+      margin-top: 3.75rem;
+      padding: 1.25rem;
+      max-width: 81.25rem;
+      margin: 5rem auto 1.25rem;
+      display: flex;
+      flex-direction: row;
+    }
+    .sidebar {
+      width: 280px;
+      padding: 1.5rem;
+      background: var(--sidebar-bg);
+      border-right: 1px solid rgba(255, 255, 255, 0.3);
+      height: calc(100vh - 60px - 2.5rem);
+      position: sticky;
+      top: 60px;
+      overflow-y: auto;
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .sidebar.collapsed {
+      transform: translateX(-100%);
+    }
+    .sidebar-toggle {
+      display: none;
+      position: fixed;
+      top: 70px;
+      left: 10px;
+      background: var(--bg);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    .sidebar .search-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+      margin-top: 4rem;
+      order: 2;
+    }
+    .sidebar input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: none;
+      border-radius: 20px;
+      background: var(--sidebar-accent);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .sidebar input::placeholder {
+      color: #999;
+    }
+    .sidebar .search-container i {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--icon-default);
+      font-size: 1rem;
+    }
+    .filters {
+      margin-bottom: 1.5rem;
+      order: 3;
+    }
+    .filters h3 {
+      font-size: 1.1rem;
+      color: white;
+      margin-bottom: 1rem;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    .filters label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      color: white;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .filters input[type="checkbox"] {
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      margin-right: 0.5rem;
+      position: relative;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+    }
+    .filters input[type="checkbox"]::before {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: transparent;
+      border: 2px solid var(--accent);
+      border-radius: 50% 50% 0 0;
+      transform: rotate(-45deg);
+      clip-path: path('M 0 6 C 0 2.5 2.5 0 6 0 C 9.5 0 12 2.5 12 6 C 12 9.5 9.5 12 6 12 C 2.5 12 0 9.5 0 6 Z');
+    }
+    .filters input[type="checkbox"]:checked::before {
+      background: var(--bg);
+      border-color: var(--bg);
+    }
+    .filters input[type="checkbox"]:checked::after {
+      content: '\f004';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      font-size: 0.5rem;
+    }
+    .sidebar .nav-icon {
+      font-size: 2rem;
+      color: white;
+      background: radial-gradient(circle at center, var(--bg) 0%, var(--accent) 100%);
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      animation: pulse 2s infinite;
+      position: absolute;
+      top: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      order: 1;
+    }
+    .sidebar .nav-icon:hover {
+      transform: scale(1.1) translateX(-50%);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    @keyframes pulse {
+      0% { transform: scale(1) translateX(-50%); }
+      50% { transform: scale(1.05) translateX(-50%); }
+      100% { transform: scale(1) translateX(-50%); }
+    }
+    .gift-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      padding-left: 1.25rem;
+    }
+    .card {
+      width: 100%;
+      height: 18.75rem;
+      border-radius: 0.9375rem;
+      background: rgba(105, 13, 197, 0.103);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: "";
+      height: 6.25rem;
+      width: 6.25rem;
+      position: absolute;
+      top: -40%;
+      left: -20%;
+      border-radius: 50%;
+      border: 2.1875rem solid rgba(255, 255, 255, 0.102);
+      transition: all 0.8s ease;
+      filter: blur(0.5rem);
+    }
+    .card:hover::before {
+      width: 8.75rem;
+      height: 8.75rem;
+      top: -30%;
+      left: 50%;
+      filter: blur(0rem);
+    }
+    .gift-image {
+      width: 100%;
+      height: 9.375rem;
+      object-fit: cover;
+      border-top-left-radius: 0.9375rem;
+      border-top-right-radius: 0.9375rem;
+    }
+    .text {
+      flex-grow: 1;
+      padding: 0.9375rem;
+      display: flex;
+      flex-direction: column;
+      color: #FFFFFF;
+      font-weight: 900;
+      font-size: 1.3em;
+      text-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.3);
+    }
+    .subtitle {
+      font-size: 0.7em;
+      font-weight: 300;
+      color: #FFFFFF;
+      text-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.3);
+    }
+    .icons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      border-radius: 0 0 0.9375rem 0.9375rem;
+      overflow: hidden;
+    }
+    .btn {
+      border: none;
+      width: 5.25rem;
+      height: 2.1875rem;
+      background-color: rgba(247, 234, 234, 0.589);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .svg-icon {
+      width: 1.5625rem;
+      height: 1.5625rem;
+      stroke: rgb(38, 59, 126);
+    }
+    .btn:hover {
+      background-color: rgb(247, 234, 234);
+    }
+    .sparkle {
+      position: fixed;
+      width: 0.625rem;
+      height: 0.625rem;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      box-shadow: 0 0 0.625rem rgba(255, 255, 255, 0.8);
+      pointer-events: none;
+      z-index: 1001;
+      animation: sparkleToCart 0.7s ease-in-out forwards;
+    }
+    @keyframes sparkleToCart {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.8; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+    #cartModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1002;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .cart-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 1rem;
+    }
+    .cart-item img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      margin-right: 1rem;
+    }
+    .cart-item div {
+      flex: 1;
+    }
+    .cart-item input {
+      width: 50px;
+      margin-right: 1rem;
+      padding: 0.25rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .cart-item button {
+      margin: 0 0.5rem;
+      padding: 0.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      color: var(--bg);
+    }
+    .cart-item button:hover {
+      color: #e74c3c;
+    }
+    #cartModal button {
+      margin-top: 1rem;
+      margin-right: 1rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #cartModal button:hover {
+      opacity: 0.9;
+    }
+    #totalPrice {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-top: 1rem;
+      color: var(--text);
+    }
+    @media (max-width: 1024px) {
+      .gift-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .search-bar {
+        flex: 0 0 18.75rem;
+      }
+    }
+    @media (max-width: 768px) {
+      body {
+        background: radial-gradient(circle at center, var(--bg) 0%, var(--bg-secondary) 50%, #fff 100%);
+        animation: none;
+      }
+      .header {
+        flex-direction: column;
+        height: auto;
+        padding: 0.5rem;
+      }
+      .logo-section {
+        justify-content: center;
+        width: 100%;
+      }
+      .search-bar {
+        flex: 0 0 100%;
+        margin: 0.5rem 0;
+      }
+      .search-bar input {
+        font-size: 0.75rem;
+      }
+      .navbar {
+        gap: 2.5rem;
+      }
+      .nav-icon {
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 1.5rem;
+      }
+      .right-icons {
+        gap: 0.625rem;
+        font-size: 1.5rem;
+        margin-right: 0;
+        justify-content: center;
+      }
+      .right-icons .nav-icon {
+        font-size: 1.5rem;
+      }
+      .profile-pic {
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 1rem;
+      }
+      .badge {
+        width: 0.875rem;
+        height: 0.875rem;
+        font-size: 0.5625rem;
+        top: -0.125rem;
+        right: -0.125rem;
+      }
+      .dropdown {
+        min-width: 220px;
+        top: 40px;
+        right: 5px;
+        border-radius: 10px;
+        padding: 8px 0;
+      }
+      .dropdown-item {
+        padding: 10px 15px;
+      }
+      .main-content {
+        padding: 0.9375rem;
+        max-width: calc(100% - 1rem);
+        margin: 4.375rem auto 0.9375rem;
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        z-index: 1000;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        transform: translateX(-100%);
+      }
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      .sidebar .nav-icon {
+        top: 0.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .sidebar .search-container {
+        margin-top: 3.5rem;
+      }
+      .sidebar-toggle {
+        display: block;
+      }
+      .gift-grid {
+        grid-template-columns: repeat(2, 1fr);
+        justify-items: center;
+        padding-left: 0;
+      }
+      .card {
+        width: 100%;
+        max-width: 15.625rem;
+      }
+      .icons {
+        width: 100%;
+      }
+      .text {
+        font-size: 1.1em;
+      }
+      .subtitle {
+        font-size: 0.65em;
+      }
+    }
+    @media (max-width: 480px) {
+      .gift-grid {
+        grid-template-columns: 1fr;
+      }
+      .search-bar {
+        flex: 0 0 100%;
+        max-width: 15rem;
+      }
+      .search-bar input {
+        font-size: 0.7rem;
+        height: 2rem;
+      }
+      .logo img {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+      .nav-icon {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1.25rem;
+      }
+      .profile-pic {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.875rem;
+      }
+      .btn {
+        width: 4.5rem;
+        height: 2rem;
+      }
+      .svg-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo-section">
+      <div class="logo" onclick="goToHome()">
+        <img src="logo.png" alt="Logo">
+      </div>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Tìm kiếm tin nhắn...">
+    </div>
+    <nav class="navbar">
+    </nav>
+    <div class="right-icons">
+      <a href="hopthu.html" class="nav-icon" title="Hộp thư" onclick="handleTransition(event, 'hopthu.html')"><i class="fas fa-envelope"></i><span class="badge">2</span></a>
+      <a href="#" class="nav-icon" title="Giỏ quà" id="cartIcon" onclick="showCart()"><i class="fas fa-gift"></i><span class="badge" id="cartCount">0</span></a>
+      <div class="nav-icon" title="Thông báo" id="notificationIcon"><i class="fas fa-bell"></i><span class="badge">3</span></div>
+      <div class="profile-pic" title="Tài khoản" id="profileIcon">A</div>
+      <div class="dropdown" id="notificationDropdown">
+        <div class="dropdown-item"><i class="fas fa-edit"></i> Bài viết của bạn đã được đăng</div>
+        <div class="dropdown-item"><i class="fas fa-check-circle"></i> Admin đã duyệt bài của bạn</div>
+        <div class="dropdown-item"><i class="fas fa-comment"></i> Có bình luận mới trên bài viết</div>
+      </div>
+      <div class="dropdown" id="profileDropdown">
+        <div class="dropdown-item"><i class="fas fa-user-edit"></i> Chỉnh sửa hồ sơ</div>
+        <div class="dropdown-item"><i class="fas fa-lock"></i> Đổi mật khẩu</div>
+        <div class="dropdown-item"><i class="fas fa-credit-card"></i> Thêm phương thức thanh toán</div>
+        <div class="dropdown-item"><i class="fas fa-cog"></i> Cài đặt tài khoản</div>
+        <div class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Đăng xuất</div>
+      </div>
+    </div>
+  </header>
+  <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+  <main class="main-content">
+    <aside class="sidebar" id="sidebar">
+      <a href="#" class="nav-icon" title="Hộp quà" id="sidebarCartIcon" onclick="showCart()"><i class="fas fa-gift"></i><span class="badge" id="sidebarCartCount">0</span></a>
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" id="sidebarSearch" placeholder="Tìm kiếm quà...">
+      </div>
+      <div class="filters">
+        <h3>Lọc theo giá tiền</h3>
+        <label><input type="checkbox" value="10000"> 10.000 VND</label>
+        <label><input type="checkbox" value="20000"> 20.000 VND</label>
+        <label><input type="checkbox" value="50000"> 50.000 VND</label>
+        <label><input type="checkbox" value="100000"> 100.000 VND</label>
+        <label><input type="checkbox" value="200000"> 200.000 VND</label>
+        <label><input type="checkbox" value="500000"> 500.000 VND</label>
+      </div>
+    </aside>
+    <section class="gift-grid" id="giftGrid">
+      <!-- Gift cards will be dynamically inserted here -->
+    </section>
+  </main>
+  <div id="cartModal">
+    <div class="modal-content">
+      <h2>Hộp Quà</h2>
+      <div id="cartItems"></div>
+      <div id="totalPrice">Tổng giá: 0 VND</div>
+      <button id="sendButton">Gửi</button>
+      <button onclick="closeModal()">Đóng</button>
+    </div>
+  </div>
+  <script>
+    const gifts = [
+      { image: "q1.jpg", name: "Thiệp Chúc Mừng", price: 10000 },
+      { image: "q2.jpg", name: "Kẹo Dẻo Tình Yêu", price: 20000 },
+      { image: "q3.jpg", name: "Bình Hoa Nhỏ", price: 50000 },
+      { image: "q4.jpg", name: "Hộp Sô-cô-la", price: 100000 },
+      { image: "q5.jpg", name: "Gấu Bông Nhỏ", price: 200000 },
+      { image: "q6.jpg", name: "Dây Chuyền Bạc", price: 500000 },
+      { image: "q7.jpg", name: "Nến Thơm Mini", price: 10000 },
+      { image: "q8.jpg", name: "Bút Bi In Hình", price: 20000 },
+      { image: "q9.jpg", name: "Khăn Tay Thêu", price: 50000 },
+      { image: "q10.jpg", name: "Hộp Quà Tình Yêu", price: 100000 },
+      { image: "q11.jpg", name: "Bó Hoa Cúc", price: 200000 },
+      { image: "q12.jpg", name: "Vòng Tay Charm", price: 500000 },
+      { image: "q13.jpg", name: "Bookmark Handmade", price: 10000 },
+      { image: "q14.jpg", name: "Lọ Thủy Tinh Mini", price: 20000 },
+      { image: "q15.jpg", name: "Móc Khóa Đôi", price: 50000 },
+      { image: "q16.jpg", name: "Bộ Sô-cô-la Cao Cấp", price: 100000 },
+      { image: "q17.jpg", name: "Gấu Bông Lớn", price: 200000 },
+      { image: "q18.jpg", name: "Bình Pha Lê", price: 500000 },
+      { image: "q19.jpg", name: "Thiệp 3D", price: 10000 },
+      { image: "q20.jpg", name: "Hộp Nhạc Tình Yêu", price: 20000 },
+    ];
+
+    let cart = [];
+    let cartCount = 0;
+    let searchTerm = '';
+    let selectedPrices = [];
+
+    function renderGifts() {
+      let filtered = gifts.filter(g => g.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      if (selectedPrices.length > 0) {
+        filtered = filtered.filter(g => selectedPrices.includes(g.price.toString()));
+      }
+      const giftGrid = document.getElementById('giftGrid');
+      giftGrid.innerHTML = filtered.map((gift, index) => `
+        <div class="card">
+          <img src="${gift.image}" alt="${gift.name}" class="gift-image">
+          <div class="text">
+            <span>${gift.name}</span>
+            <span class="subtitle">${gift.price.toLocaleString('vi-VN')} VND</span>
+          </div>
+          <div class="icons">
+            <button class="btn" onclick="addToCart(event, ${gifts.indexOf(gift)})">
+              <i class="fas fa-gift svg-icon" style="color: rgb(38, 59, 126);"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addToCart(event, index) {
+      const btn = event.currentTarget;
+      const btnRect = btn.getBoundingClientRect();
+      const cartIcon = document.getElementById('cartIcon');
+      const cartRect = cartIcon.getBoundingClientRect();
+
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.style.left = `${btnRect.left + btnRect.width / 2}px`;
+      sparkle.style.top = `${btnRect.top + btnRect.height / 2}px`;
+      document.body.appendChild(sparkle);
+
+      const deltaX = cartRect.left + cartRect.width / 2 - (btnRect.left + btnRect.width / 2);
+      const deltaY = cartRect.top + cartRect.height / 2 - (btnRect.top + btnRect.height / 2);
+
+      sparkle.animate([
+        { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+        { transform: `translate(${deltaX}px, ${deltaY}px) scale(0)`, opacity: 0 }
+      ], {
+        duration: 700,
+        easing: 'ease-in-out',
+        fill: 'forwards'
+      });
+
+      setTimeout(() => {
+        sparkle.remove();
+      }, 700);
+
+      const gift = gifts[index];
+      const existing = cart.find(item => item.gift.name === gift.name);
+      if (existing) {
+        existing.quantity++;
+      } else {
+        cart.push({ gift, quantity: 1 });
+      }
+      updateCartCount();
+    }
+
+    function updateCartCount() {
+      cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cartCount').textContent = cartCount;
+      document.getElementById('sidebarCartCount').textContent = cartCount;
+      renderCartItems();
+    }
+
+    function showCart() {
+      document.getElementById('cartModal').style.display = 'flex';
+      renderCartItems();
+    }
+
+    function closeModal() {
+      document.getElementById('cartModal').style.display = 'none';
+    }
+
+    function renderCartItems() {
+      const container = document.getElementById('cartItems');
+      container.innerHTML = cart.map((item, idx) => `
+        <div class="cart-item">
+          <img src="${item.gift.image}" alt="${item.gift.name}">
+          <div>
+            <span>${item.gift.name}</span>
+            <span>${item.gift.price.toLocaleString('vi-VN')} VND</span>
+          </div>
+          <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${idx}, this.value)">
+          <button onclick="deleteItem(${idx})"><i class="fas fa-trash"></i></button>
+        </div>
+      `).join('');
+      updateTotalPrice();
+    }
+
+    function updateTotalPrice() {
+      const total = cart.reduce((sum, item) => sum + item.gift.price * item.quantity, 0);
+      document.getElementById('totalPrice').textContent = `Tổng giá: ${total.toLocaleString('vi-VN')} VND`;
+    }
+
+    function updateQuantity(idx, val) {
+      if (val < 1) return;
+      cart[idx].quantity = parseInt(val);
+      updateCartCount();
+    }
+
+    function deleteItem(idx) {
+      cart.splice(idx, 1);
+      updateCartCount();
+    }
+
+    function goToHome() {
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = 'man3.html';
+      }, 500);
+    }
+
+    function handleTransition(event, url) {
+      event.preventDefault();
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 500);
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderGifts();
+
+      document.getElementById('sidebarSearch').addEventListener('input', e => {
+        searchTerm = e.target.value;
+        renderGifts();
+      });
+
+      document.querySelectorAll('.filters input').forEach(input => {
+        input.addEventListener('change', () => {
+          selectedPrices = Array.from(document.querySelectorAll('.filters input:checked')).map(inp => inp.value);
+          renderGifts();
+        });
+      });
+
+      document.getElementById('sendButton').addEventListener('click', () => {
+        alert('Quà đã được gửi!');
+        cart = [];
+        updateCartCount();
+        closeModal();
+      });
+
+      // Dropdown functionality for notification and profile
+      const notificationIcon = document.getElementById('notificationIcon');
+      const profileIcon = document.getElementById('profileIcon');
+      const notificationDropdown = document.getElementById('notificationDropdown');
+      const profileDropdown = document.getElementById('profileDropdown');
+
+      notificationIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        notificationDropdown.classList.toggle('active');
+        profileDropdown.classList.remove('active');
+      });
+
+      profileIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('active');
+        notificationDropdown.classList.remove('active');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!notificationIcon.contains(e.target) && !notificationDropdown.contains(e.target)) {
+          notificationDropdown.classList.remove('active');
+        }
+        if (!profileIcon.contains(e.target) && !profileDropdown.contains(e.target)) {
+          profileDropdown.classList.remove('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

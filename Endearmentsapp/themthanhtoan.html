@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Thêm Phương Thức Thanh Toán</title>
+  <style>
+    :root {
+      --default-color: #F6D8DC;
+      --heading-color: #FAE2E8;
+      --accent-color: #FAE2E8;
+      --dark-pink: #ef447a;
+      --light-pink: #FFF0F5;
+      --container-w: 400px; /* Increased width to prevent overflow */
+      --input-radius: 32px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, var(--light-pink) 0%, var(--accent-color) 50%, #ffd1dc 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60%;
+      background: linear-gradient(to top, rgba(239, 68, 122, 0.15), transparent);
+      clip-path: path('M0,150 C300,250 600,50 900,150 C1200,250 1500,50 1800,150 L1920,0 H0 Z');
+      animation: wave 7s infinite ease-in-out;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 70%;
+      background: linear-gradient(to top, rgba(250, 226, 232, 0.2), transparent);
+      clip-path: path('M0,180 C350,100 700,200 1050,150 C1400,100 1750,200 1920,150 L1920,0 H0 Z');
+      animation: wave 9s infinite ease-in-out reverse;
+      z-index: 0;
+    }
+    @keyframes wave {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    .card {
+      width: 100%;
+      max-width: var(--container-w);
+      text-align: center;
+      z-index: 1;
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px 16px; /* Reduced side padding for balance */
+      box-shadow: 0 10px 30px rgba(239, 68, 122, 0.1);
+      overflow: hidden; /* Prevent content overflow */
+    }
+    h1 {
+      font-size: 26px;
+      margin: 0 0 12px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    h3 {
+      font-size: 16px;
+      margin: 0 0 16px;
+      color: #4a4a4a;
+      font-weight: 400;
+    }
+    .avatar-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, rgba(239,68,122,0.08), rgba(255,255,255,0.6));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(239,68,122,0.08);
+    }
+    .avatar svg { width: 60px; height: 60px; }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: stretch;
+      padding: 0 8px;
+    }
+    .payment-type {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .payment-type label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      color: #4a4a4a;
+      cursor: pointer;
+    }
+    .payment-type input[type="radio"] {
+      accent-color: var(--dark-pink);
+    }
+    .input-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border-radius: var(--input-radius);
+      padding: 12px 16px;
+      border: 1px solid rgba(239,68,122,0.12);
+      box-shadow: 0 4px 12px rgba(239,68,122,0.03);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      width: 100%; /* Ensure inputs don't exceed container */
+    }
+    .input-pill:focus-within {
+      border-color: var(--dark-pink);
+      box-shadow: 0 4px 12px rgba(239,68,122,0.15);
+    }
+    .input-pill input, .input-pill select {
+      border: 0;
+      outline: none;
+      font-size: 15px;
+      flex: 1;
+      background: transparent;
+    }
+    .input-pill select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="%23ef447a" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+      background-size: 12px;
+    }
+    .input-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* Equal columns */
+      gap: 12px;
+      width: 100%; /* Ensure group fits within card */
+    }
+    .input-group .input-pill {
+      min-width: 0; /* Prevent overflow in grid */
+    }
+    .card-fields, .transfer-fields {
+      display: none;
+    }
+    .card-fields.active, .transfer-fields.active {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .btn-submit, .btn-cancel {
+      border: 0;
+      border-radius: 28px;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      flex: 1; /* Equal button sizes */
+    }
+    .btn-submit {
+      background: linear-gradient(135deg, var(--dark-pink), #ff8aa0);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(239,68,122,0.18);
+    }
+    .btn-cancel {
+      background: #fff;
+      color: var(--dark-pink);
+      border: 1px solid var(--dark-pink);
+      box-shadow: 0 4px 12px rgba(239,68,122,0.1);
+    }
+    .btn-submit:hover, .btn-cancel:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(239,68,122,0.22);
+    }
+    .btn-submit:active, .btn-cancel:active {
+      transform: translateY(1px);
+    }
+    .policy {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #4a4a4a;
+      line-height: 1.4;
+      padding: 0 10px;
+    }
+    .policy a { color: var(--dark-pink); text-decoration: none; font-weight: 600; }
+    .policy a:hover { text-decoration: underline; }
+    .error-message {
+      color: var(--dark-pink);
+      font-size: 12px;
+      text-align: left;
+      padding: 4px 16px 0;
+      display: none;
+    }
+    .error .error-message { display: block; }
+    .error .input-pill { border-color: var(--dark-pink); }
+    .spacer-small { height: 8px; }
+    @media (max-width: 420px) {
+      :root { --container-w: calc(100% - 24px); }
+      .avatar { width: 80px; height: 80px; }
+      .avatar svg { width: 48px; height: 48px; }
+      h1 { font-size: 22px; margin-bottom: 10px; }
+      h3 { font-size: 14px; }
+      .btn-submit, .btn-cancel { font-size: 14px; padding: 12px 14px; }
+      .input-group { grid-template-columns: 1fr; }
+      .payment-type { flex-direction: column; align-items: flex-start; }
+      .input-pill { padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="title">
+    <div class="avatar-wrap" aria-hidden="true">
+      <div class="avatar" title="avatar">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#ffd9df" />
+              <stop offset="1" stop-color="#ff9fb0" />
+            </linearGradient>
+            <linearGradient id="g2" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#bfe7ff" />
+              <stop offset="1" stop-color="#79c8ff" />
+            </linearGradient>
+          </defs>
+          <circle cx="32" cy="32" r="30" fill="rgba(255,255,255,0.6)"/>
+          <circle cx="32" cy="22" r="10" fill="url(#g1)"/>
+          <path d="M17 50c0-8 8-14 15-14s15 6 15 14" fill="url(#g2)"/>
+        </svg>
+      </div>
+    </div>
+    <h2 id="title">Thêm Phương Thức Thanh Toán</h2>
+    <h4>Chọn và nhập thông tin thanh toán</h4>
+    <form id="addPaymentForm" action="#" method="post" novalidate>
+      <div class="payment-type">
+        <label for="type-card">
+          <input type="radio" id="type-card" name="payment-type" value="card" checked> Thẻ
+        </label>
+        <label for="type-transfer">
+          <input type="radio" id="type-transfer" name="payment-type" value="transfer"> Chuyển khoản
+        </label>
+      </div>
+      <div class="card-fields active">
+        <label class="input-pill" for="bank">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 8l9-6 9 6v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+              <path d="M6 20v-8l6-4 6 4v8" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+            </svg>
+          </span>
+          <select id="bank" name="bank" required>
+            <option value="" disabled selected>Chọn ngân hàng</option>
+            <option value="vietcombank">Vietcombank</option>
+            <option value="techcombank">Techcombank</option>
+            <option value="mb">MB Bank</option>
+            <option value="tpbank">TPBank</option>
+            <option value="vib">VIB</option>
+          </select>
+        </label>
+        <div class="error-message" id="bank-error">Vui lòng chọn ngân hàng.</div>
+        <label class="input-pill" for="cardholder">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="4" fill="#000" opacity="0.6"/>
+              <path d="M5 20c0-4 3-7 7-7s7 3 7 7" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+            </svg>
+          </span>
+          <input id="cardholder" name="cardholder" type="text" placeholder="Tên chủ thẻ" autocomplete="cc-name" required />
+        </label>
+        <div class="error-message" id="cardholder-error">Vui lòng nhập tên chủ thẻ.</div>
+        <label class="input-pill" for="cardnumber">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="4" width="20" height="16" rx="2" fill="#000" opacity="0.06"/>
+              <path d="M2 8h20" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+            </svg>
+          </span>
+          <input id="cardnumber" name="cardnumber" type="text" placeholder="Số thẻ (16 số)" autocomplete="cc-number" maxlength="19" required />
+        </label>
+        <div class="error-message" id="cardnumber-error">Vui lòng nhập số thẻ hợp lệ (16 số).</div>
+        <div class="input-group">
+          <label class="input-pill" for="expiry">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2v20M2 12h20" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+              </svg>
+            </span>
+            <input id="expiry" name="expiry" type="text" placeholder="MM/YY" autocomplete="cc-exp" maxlength="5" required />
+          </label>
+          <label class="input-pill" for="cvv">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 11H7a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2z" fill="#000" opacity="0.6"/>
+              </svg>
+            </span>
+            <input id="cvv" name="cvv" type="text" placeholder="CVV" autocomplete="cc-csc" maxlength="4" required />
+          </label>
+        </div>
+        <div class="error-message" id="expiry-error">Vui lòng nhập ngày hết hạn hợp lệ (MM/YY).</div>
+        <div class="error-message" id="cvv-error">Vui lòng nhập CVV hợp lệ (3-4 số).</div>
+      </div>
+      <div class="transfer-fields">
+        <label class="input-pill" for="bank-transfer">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 8l9-6 9 6v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+              <path d="M6 20v-8l6-4 6 4v8" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+            </svg>
+          </span>
+          <select id="bank-transfer" name="bank-transfer" required>
+            <option value="" disabled selected>Chọn ngân hàng</option>
+            <option value="vietcombank">Vietcombank</option>
+            <option value="techcombank">Techcombank</option>
+            <option value="mb">MB Bank</option>
+            <option value="tpbank">TPBank</option>
+            <option value="vib">VIB</option>
+          </select>
+        </label>
+        <div class="error-message" id="bank-transfer-error">Vui lòng chọn ngân hàng.</div>
+        <label class="input-pill" for="accountnumber">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="4" width="20" height="16" rx="2" fill="#000" opacity="0.06"/>
+              <path d="M2 8h20" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+            </svg>
+          </span>
+          <input id="accountnumber" name="accountnumber" type="text" placeholder="Số tài khoản" maxlength="20" required />
+        </label>
+        <div class="error-message" id="accountnumber-error">Vui lòng nhập số tài khoản hợp lệ.</div>
+      </div>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button type="submit" class="btn-submit">Lưu</button>
+        <button type="button" class="btn-cancel" onclick="window.location.href='dashboard.html'">Hủy</button>
+      </div>
+      <p class="policy">
+        Thông tin thanh toán được mã hóa an toàn. Quay về <a href="man3.html">Trang Chủ</a>
+      </p>
+    </form>
+  </div>
+  <script>
+    (function(){
+      const form = document.getElementById('addPaymentForm');
+      const cardFields = document.querySelector('.card-fields');
+      const transferFields = document.querySelector('.transfer-fields');
+      const cardRadio = document.getElementById('type-card');
+      const transferRadio = document.getElementById('type-transfer');
+
+      function toggleFields() {
+        if (cardRadio.checked) {
+          cardFields.classList.add('active');
+          transferFields.classList.remove('active');
+          document.querySelectorAll('.transfer-fields [required]').forEach(el => el.removeAttribute('required'));
+          document.querySelectorAll('.card-fields [required]').forEach(el => el.setAttribute('required', ''));
+        } else {
+          cardFields.classList.remove('active');
+          transferFields.classList.add('active');
+          document.querySelectorAll('.card-fields [required]').forEach(el => el.removeAttribute('required'));
+          document.querySelectorAll('.transfer-fields [required]').forEach(el => el.setAttribute('required', ''));
+        }
+      }
+
+      cardRadio.addEventListener('change', toggleFields);
+      transferRadio.addEventListener('change', toggleFields);
+      toggleFields(); // Initialize
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        document.querySelectorAll('.input-pill').forEach(el => el.parentElement.classList.remove('error'));
+        let hasError = false;
+
+        if (cardRadio.checked) {
+          const bank = document.getElementById('bank').value;
+          const cardholder = document.getElementById('cardholder').value.trim();
+          const cardnumber = document.getElementById('cardnumber').value.replace(/\D/g, '');
+          const expiry = document.getElementById('expiry').value.trim();
+          const cvv = document.getElementById('cvv').value.trim();
+
+          if (!bank) {
+            document.getElementById('bank').parentElement.classList.add('error');
+            hasError = true;
+          }
+          if (!cardholder) {
+            document.getElementById('cardholder').parentElement.classList.add('error');
+            hasError = true;
+          }
+          if (!cardnumber || !/^[0-9]{16}$/.test(cardnumber)) {
+            document.getElementById('cardnumber').parentElement.classList.add('error');
+            hasError = true;
+          }
+          if (!expiry || !/^(0[1-9]|1[0-2])\/[0-9]{2}$/.test(expiry)) {
+            document.getElementById('expiry').parentElement.classList.add('error');
+            hasError = true;
+          }
+          if (!cvv || !/^[0-9]{3,4}$/.test(cvv)) {
+            document.getElementById('cvv').parentElement.classList.add('error');
+            hasError = true;
+          }
+        } else {
+          const bankTransfer = document.getElementById('bank-transfer').value;
+          const accountnumber = document.getElementById('accountnumber').value.replace(/\D/g, '');
+
+          if (!bankTransfer) {
+            document.getElementById('bank-transfer').parentElement.classList.add('error');
+            hasError = true;
+          }
+          if (!accountnumber || !/^[0-9]{8,20}$/.test(accountnumber)) {
+            document.getElementById('accountnumber').parentElement.classList.add('error');
+            hasError = true;
+          }
+        }
+
+        if (hasError) {
+          return false;
+        }
+
+        // Simulate form submission (replace with payment gateway API call)
+        alert('Phương thức thanh toán đã được thêm thành công!');
+        // Optionally redirect to dashboard
+        // window.location.href = 'dashboard.html';
+      });
+
+      // Format card number input (add spaces every 4 digits)
+      document.getElementById('cardnumber').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 16) value = value.slice(0, 16);
+        e.target.value = value.replace(/(.{4})/g, '$1 ').trim();
+      });
+
+      // Format expiry input
+      document.getElementById('expiry').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 4) value = value.slice(0, 4);
+        if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
+        e.target.value = value;
+      });
+
+      // Format account number input (numbers only)
+      document.getElementById('accountnumber').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 20) value = value.slice(0, 20);
+        e.target.value = value;
+      });
+    })();
+  </script>
+</body>
+</html>

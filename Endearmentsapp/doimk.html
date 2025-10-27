@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Đổi Mật Khẩu</title>
+  <style>
+    :root {
+      --default-color: #F6D8DC;
+      --heading-color: #FAE2E8;
+      --accent-color: #FAE2E8;
+      --dark-pink: #ef447a;
+      --light-pink: #FFF0F5;
+      --container-w: 360px;
+      --input-radius: 28px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, var(--light-pink) 0%, var(--accent-color) 50%, #ffd1dc 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60%;
+      background: linear-gradient(to top, rgba(239, 68, 122, 0.15), transparent);
+      clip-path: path('M0,150 C300,250 600,50 900,150 C1200,250 1500,50 1800,150 L1920,0 H0 Z');
+      animation: wave 7s infinite ease-in-out;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 70%;
+      background: linear-gradient(to top, rgba(250, 226, 232, 0.2), transparent);
+      clip-path: path('M0,180 C350,100 700,200 1050,150 C1400,100 1750,200 1920,150 L1920,0 H0 Z');
+      animation: wave 9s infinite ease-in-out reverse;
+      z-index: 0;
+    }
+    @keyframes wave {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    .card {
+      width: 100%;
+      max-width: var(--container-w);
+      text-align: center;
+      z-index: 1;
+    }
+    h1 {
+      font-size: 24px;
+      margin-top: 6px;
+      margin-bottom: 18px;
+      font-weight: 700;
+      color: #000;
+    }
+    .avatar-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, rgba(239,68,122,0.08), rgba(255,255,255,0.6));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(239,68,122,0.08);
+      margin: 0 auto 6px;
+    }
+    .avatar svg { width: 72px; height: 72px; }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+      padding: 0 6px;
+    }
+    .input-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border-radius: var(--input-radius);
+      padding: 12px 16px;
+      border: 1px solid rgba(239,68,122,0.12);
+      box-shadow: 0 6px 18px rgba(239,68,122,0.03);
+    }
+    .input-pill input {
+      border: 0;
+      outline: none;
+      font-size: 15px;
+      flex: 1;
+      background: transparent;
+    }
+    .icon {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      display: inline-block;
+    }
+    .eye-btn {
+      background: transparent;
+      border: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex: 0 0 24px;
+    }
+    .btn-submit {
+      margin-top: 6px;
+      background: linear-gradient(135deg, var(--dark-pink), #ff8aa0);
+      color: #fff;
+      border: 0;
+      border-radius: 28px;
+      padding: 14px 16px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(239,68,122,0.18);
+    }
+    .btn-submit:active { transform: translateY(1px); }
+    .policy {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #3a3a3a;
+      line-height: 1.3;
+      padding: 0 10px;
+    }
+    .policy a { color: var(--dark-pink); text-decoration: none; font-weight: 600; }
+    .spacer-small { height: 6px; }
+    @media (max-width: 420px) {
+      :root { --container-w: calc(100% - 32px); }
+      .avatar { width: 100px; height: 100px; }
+      .avatar svg { width: 60px; height: 60px; }
+      h1 { font-size: 20px; margin-bottom: 12px; }
+      .btn-submit { font-size: 16px; padding: 12px 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="title">
+    <div class="avatar-wrap" aria-hidden="true">
+      <div class="avatar" title="avatar">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#ffd9df" />
+              <stop offset="1" stop-color="#ff9fb0" />
+            </linearGradient>
+            <linearGradient id="g2" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#bfe7ff" />
+              <stop offset="1" stop-color="#79c8ff" />
+            </linearGradient>
+          </defs>
+          <circle cx="32" cy="32" r="30" fill="rgba(255,255,255,0.6)"/>
+          <circle cx="32" cy="22" r="10" fill="url(#g1)"/>
+          <path d="M17 50c0-8 8-14 15-14s15 6 15 14" fill="url(#g2)"/>
+        </svg>
+      </div>
+    </div>
+    <h1 id="title">Đổi Mật Khẩu</h1>
+    <h3>Vui lòng nhập mật khẩu mới</h3>
+    <form id="changePwdForm" action="#" method="post" novalidate>
+      <label class="input-pill" for="password">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill="#000" opacity="0.6"/>
+            <path d="M18 8h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1m6 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+          </svg>
+        </span>
+        <input id="password" name="password" type="password" placeholder="Nhập mật khẩu mới" autocomplete="new-password" required />
+        <button type="button" id="togglePwd" class="eye-btn" aria-label="Hiển thị mật khẩu" title="Hiển thị mật khẩu">
+          <span id="eyeOpen" style="display: none;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+              <circle cx="12" cy="12" r="3" fill="#000" opacity="0.6"/>
+            </svg>
+          </span>
+          <span id="eyeClosed">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 3l18 18M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+              <circle cx="12" cy="12" r="3" fill="#000" opacity="0.6"/>
+            </svg>
+          </span>
+        </button>
+      </label>
+      <label class="input-pill" for="confirmPassword">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill="#000" opacity="0.6"/>
+            <path d="M18 8h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1m6 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+          </svg>
+        </span>
+        <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Xác nhận mật khẩu" autocomplete="new-password" required />
+        <button type="button" id="toggleConfirmPwd" class="eye-btn" aria-label="Hiển thị mật khẩu" title="Hiển thị mật khẩu">
+          <span id="eyeOpenConfirm" style="display: none;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+              <circle cx="12" cy="12" r="3" fill="#000" opacity="0.6"/>
+            </svg>
+          </span>
+          <span id="eyeClosedConfirm">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 3l18 18M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+              <circle cx="12" cy="12" r="3" fill="#000" opacity="0.6"/>
+            </svg>
+          </span>
+        </button>
+      </label>
+      <button type="submit" class="btn-submit">Cập Nhật Mật Khẩu</button>
+      <p class="policy">
+        Quay về <a href="login.html">đăng nhập</a>
+      </p>
+    </form>
+  </div>
+  <script>
+    (function(){
+      const pwd = document.getElementById('password');
+      const confirmPwd = document.getElementById('confirmPassword');
+      const togglePwd = document.getElementById('togglePwd');
+      const toggleConfirmPwd = document.getElementById('toggleConfirmPwd');
+      const eyeOpen = document.getElementById('eyeOpen');
+      const eyeClosed = document.getElementById('eyeClosed');
+      const eyeOpenConfirm = document.getElementById('eyeOpenConfirm');
+      const eyeClosedConfirm = document.getElementById('eyeClosedConfirm');
+
+      togglePwd.addEventListener('click', () => {
+        if (pwd.type === 'password') {
+          pwd.type = 'text';
+          eyeOpen.style.display = 'inline';
+          eyeClosed.style.display = 'none';
+          togglePwd.setAttribute('aria-label', 'Ẩn mật khẩu');
+          togglePwd.title = 'Ẩn mật khẩu';
+        } else {
+          pwd.type = 'password';
+          eyeOpen.style.display = 'none';
+          eyeClosed.style.display = 'inline';
+          togglePwd.setAttribute('aria-label', 'Hiển thị mật khẩu');
+          togglePwd.title = 'Hiển thị mật khẩu';
+        }
+      });
+
+      toggleConfirmPwd.addEventListener('click', () => {
+        if (confirmPwd.type === 'password') {
+          confirmPwd.type = 'text';
+          eyeOpenConfirm.style.display = 'inline';
+          eyeClosedConfirm.style.display = 'none';
+          toggleConfirmPwd.setAttribute('aria-label', 'Ẩn mật khẩu');
+          toggleConfirmPwd.title = 'Ẩn mật khẩu';
+        } else {
+          confirmPwd.type = 'password';
+          eyeOpenConfirm.style.display = 'none';
+          eyeClosedConfirm.style.display = 'inline';
+          toggleConfirmPwd.setAttribute('aria-label', 'Hiển thị mật khẩu');
+          toggleConfirmPwd.title = 'Hiển thị mật khẩu';
+        }
+      });
+
+      document.getElementById('changePwdForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        const password = pwd.value;
+        const confirmPassword = confirmPwd.value;
+
+        if (!password || !confirmPassword) {
+          alert('Vui lòng điền đầy đủ mật khẩu và xác nhận mật khẩu.');
+          return false;
+        }
+
+        if (password.length < 6) {
+          alert('Mật khẩu cần ít nhất 6 ký tự.');
+          return false;
+        }
+
+        if (password !== confirmPassword) {
+          alert('Mật khẩu và xác nhận mật khẩu không khớp.');
+          return false;
+        }
+
+        // Simulate form submission (replace with actual API call in production)
+        alert('Mật khẩu đã được cập nhật thành công!');
+        // Optionally redirect to login page
+        // window.location.href = 'login.html';
+      });
+    })();
+  </script>
+</body>
+</html>

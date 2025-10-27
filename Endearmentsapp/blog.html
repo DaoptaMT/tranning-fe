@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog - Nơi Yêu Thương Được Nói Hộ</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #FAE2E8;
+      --bg: #FFB6C1;
+      --text: #222;
+      --header-bg: rgba(255, 255, 255, 0.95);
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --icon-bg: rgba(0, 0, 0, 0.05);
+      --icon-default: #65676B;
+      --card-bg: #f0f2f5;
+      --bg-secondary: #f8e1f4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background: radial-gradient(circle at center, var(--bg) 0%, var(--bg-secondary) 50%, #fff 100%);
+      background-size: 200% 200%;
+      animation: gradientShift 15s ease-in-out infinite;
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+    body.fade-out {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: var(--header-bg);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      z-index: 1000;
+    }
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .logo img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      transition: transform 0.2s ease-in-out;
+    }
+    .logo:hover img {
+      transform: scale(1.05);
+    }
+    .search-bar {
+      flex: 0 0 500px;
+      margin: 0 10px;
+      position: relative;
+    }
+    .search-bar input {
+      width: 100%;
+      height: 36px;
+      padding: 0 12px;
+      border: none;
+      border-radius: 18px;
+      font-size: 14px;
+      outline: none;
+      background: var(--icon-bg);
+      color: var(--text);
+    }
+    .search-bar input::placeholder {
+      color: #999;
+    }
+    .navbar {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 120px;
+      padding: 0;
+    }
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: var(--icon-default);
+      font-size: 30px;
+      transition: background 0.2s, transform 0.2s, color 0.2s;
+      cursor: pointer;
+      position: relative;
+      padding-bottom: 4px;
+    }
+    .nav-icon:hover {
+      background: var(--icon-bg);
+      transform: scale(1.05);
+    }
+    .nav-icon.active {
+      color: var(--bg);
+    }
+    .nav-icon.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 2px;
+      background: var(--bg);
+      border-radius: 1px;
+    }
+    .badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: #e74c3c;
+      color: white;
+      font-size: 10px;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    .right-icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 30px;
+      margin-right: 10px;
+      position: relative;
+    }
+    .right-icons .nav-icon {
+      font-size: 30px;
+    }
+    .profile-pic {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--bg);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .profile-pic:hover {
+      transform: scale(1.05);
+    }
+    .dropdown {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      min-width: 250px;
+      z-index: 1001;
+      display: none;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      padding: 10px 0;
+      background: var(--header-bg);
+      backdrop-filter: blur(10px);
+    }
+    .dropdown.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .dropdown-item {
+      padding: 12px 20px;
+      font-size: 14px;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .dropdown-item:hover {
+      background: var(--bg);
+      color: white;
+    }
+    .dropdown-item:hover i {
+      color: white;
+    }
+    .dropdown-item i {
+      color: var(--icon-default);
+      font-size: 16px;
+    }
+    .main-content {
+      margin-top: 60px;
+      padding: 20px;
+      max-width: 800px;
+      margin: 80px auto 20px;
+      overflow: hidden;
+    }
+    .blog-post {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border-left: 3px solid var(--accent);
+      position: relative;
+      transition: transform 0.5s ease-in-out;
+    }
+    .blog-post.slide-out-left {
+      transform: translateX(-100%);
+    }
+    .blog-post.slide-out-right {
+      transform: translateX(100%);
+    }
+    .blog-post.slide-in {
+      transform: translateX(0);
+    }
+    .blog-image-container {
+      position: relative;
+    }
+    .blog-image {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+      margin-bottom: 15px;
+    }
+    .nav-btn, .save-btn {
+      position: absolute;
+      top: 10px;
+      background: var(--bg);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      z-index: 10;
+    }
+    .nav-btn:hover, .save-btn:hover {
+      background: #ff99aa;
+      transform: scale(1.1);
+    }
+    .nav-btn.prev {
+      left: 10px;
+    }
+    .nav-btn.next {
+      right: 50px;
+    }
+    .save-btn {
+      right: 10px;
+    }
+    .blog-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 15px;
+      line-height: 1.3;
+    }
+    .blog-content {
+      font-family: 'Dancing Script', cursive;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    .blog-meta {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 768px) {
+      body {
+        background: radial-gradient(circle at center, var(--bg) 0%, var(--bg-secondary) 50%, #fff 100%);
+        animation: none;
+      }
+      .header { padding: 0 5px; }
+      .search-bar { flex: 0 0 250px; margin: 0 5px; }
+      .navbar {
+        flex: 1;
+        gap: 40px;
+        justify-content: center;
+      }
+      .nav-icon { width: 28px; height: 28px; font-size: 24px; }
+      .right-icons {
+        gap: 10px;
+        font-size: 24px;
+        margin-right: 5px;
+      }
+      .right-icons .nav-icon { font-size: 24px; }
+      .profile-pic { width: 28px; height: 28px; }
+      .dropdown {
+        min-width: 220px;
+        top: 40px;
+        right: 5px;
+        border-radius: 10px;
+        padding: 8px 0;
+      }
+      .dropdown-item { padding: 10px 15px; }
+      .main-content {
+        padding: 8px;
+        max-width: calc(100% - 16px);
+        margin-left: 8px;
+        margin-right: 8px;
+      }
+      .blog-image { height: 250px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo-section">
+      <div class="logo" onclick="goToHome()">
+        <img src="logo.png" alt="Logo">
+      </div>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Tìm kiếm tin nhắn...">
+    </div>
+    <nav class="navbar">
+    </nav>
+    <div class="right-icons">
+      <a href="hopthu.html" class="nav-icon" title="Hộp thư" onclick="handleTransition(event, 'hopthu.html')"><i class="fas fa-envelope"></i><span class="badge">2</span></a>
+      <a href="gift.html" class="nav-icon" title="Giỏ quà" id="cartIcon" onclick="handleTransition(event, 'gift.html')"><i class="fas fa-gift"></i><span class="badge" id="cartCount">0</span></a>
+      <div class="nav-icon" title="Thông báo" id="notificationIcon"><i class="fas fa-bell"></i><span class="badge">3</span></div>
+      <div class="profile-pic" title="Tài khoản" id="profileIcon">A</div>
+      <div class="dropdown" id="notificationDropdown">
+        <div class="dropdown-item"><i class="fas fa-edit"></i> Bài viết của bạn đã được đăng</div>
+        <div class="dropdown-item"><i class="fas fa-check-circle"></i> Admin đã duyệt bài của bạn</div>
+        <div class="dropdown-item"><i class="fas fa-comment"></i> Có bình luận mới trên bài viết</div>
+      </div>
+      <div class="dropdown" id="profileDropdown">
+        <div class="dropdown-item"><i class="fas fa-user-edit"></i> Chỉnh sửa hồ sơ</div>
+        <div class="dropdown-item"><i class="fas fa-lock"></i> Đổi mật khẩu</div>
+        <div class="dropdown-item"><i class="fas fa-credit-card"></i> Thêm phương thức thanh toán</div>
+        <div class="dropdown-item"><i class="fas fa-cog"></i> Cài đặt tài khoản</div>
+        <div class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Đăng xuất</div>
+      </div>
+    </div>
+  </header>
+  <main class="main-content">
+    <article class="blog-post" id="blogPost">
+      <div class="blog-image-container">
+        <img src="b1.jpg" alt="Blog Image" class="blog-image">
+        <button class="nav-btn prev" title="Bài viết trước" onclick="prevBlog()">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <button class="nav-btn next" title="Tiếp theo" onclick="nextBlog()">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+        <button class="save-btn" title="Lưu bài viết" onclick="saveBlog()">
+          <i class="fas fa-bookmark"></i>
+        </button>
+      </div>
+      <div class="blog-meta" id="blogMeta">Đăng bởi Tâm Sự | 2 giờ trước</div>
+      <h1 class="blog-title" id="blogTitle">Lời Nhắn Đầu Tiên</h1>
+      <div class="blog-content" id="blogContent">
+        <p>Trong cuộc sống, có những khoảnh khắc nhỏ bé nhưng lại mang ý nghĩa lớn lao. Một lời nhắn, một ánh mắt, hay một nụ cười có thể thay đổi cả một ngày của ai đó. Hôm nay, tôi muốn chia sẻ về lần đầu tiên tôi nhận được một lời nhắn yêu thương từ một người bạn thân.</p>
+        <p>Đó là một ngày mưa, khi tâm trạng tôi đang chìm trong những suy nghĩ mông lung. Bất ngờ, một tin nhắn hiện lên màn hình điện thoại: "Cậu luôn là ánh sáng trong những ngày u ám của tớ." Chỉ một câu nói đơn giản, nhưng nó đã sưởi ấm trái tim tôi, khiến tôi nhận ra rằng mình không hề cô đơn.</p>
+        <p>Những lời yêu thương, dù nhỏ bé, có sức mạnh kết nối con người. Chúng nhắc nhở chúng ta rằng, ở đâu đó, luôn có người quan tâm và trân trọng mình. Hãy dành thời gian để gửi đi một lời nhắn chân thành đến những người bạn yêu quý. Biết đâu, bạn sẽ là ánh sáng trong ngày của họ.</p>
+      </div>
+    </article>
+  </main>
+  <script>
+    // Header dropdown functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      const notificationIcon = document.getElementById('notificationIcon');
+      const profileIcon = document.getElementById('profileIcon');
+      const notificationDropdown = document.getElementById('notificationDropdown');
+      const profileDropdown = document.getElementById('profileDropdown');
+
+      notificationIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        notificationDropdown.classList.toggle('active');
+        profileDropdown.classList.remove('active');
+      });
+
+      profileIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('active');
+        notificationDropdown.classList.remove('active');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!notificationIcon.contains(e.target) && !notificationDropdown.contains(e.target)) {
+          notificationDropdown.classList.remove('active');
+        }
+        if (!profileIcon.contains(e.target) && !profileDropdown.contains(e.target)) {
+          profileDropdown.classList.remove('active');
+        }
+      });
+    });
+
+    // Global functions for header
+    window.handleTransition = (event, url) => {
+      event.preventDefault();
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 500);
+    };
+
+    function goToHome() {
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = 'man3.html'; 
+      }, 500);
+    }
+
+    // Blog functionality
+    const blogPosts = [
+      {
+        image: "b1.jpg",
+        meta: "Đăng bởi Tâm Sự | 2 giờ trước",
+        title: "Lời Nhắn Đầu Tiên",
+        content: `
+          <p>Trong cuộc sống, có những khoảnh khắc nhỏ bé nhưng lại mang ý nghĩa lớn lao. Một lời nhắn, một ánh mắt, hay một nụ cười có thể thay đổi cả một ngày của ai đó. Hôm nay, tôi muốn chia sẻ về lần đầu tiên tôi nhận được một lời nhắn yêu thương từ một người bạn thân.</p>
+          <p>Đó là một ngày mưa, khi tâm trạng tôi đang chìm trong những suy nghĩ mông lung. Bất ngờ, một tin nhắn hiện lên màn hình điện thoại: "Cậu luôn là ánh sáng trong những ngày u ám của tớ." Chỉ một câu nói đơn giản, nhưng nó đã sưởi ấm trái tim tôi, khiến tôi nhận ra rằng mình không hề cô đơn.</p>
+          <p>Những lời yêu thương, dù nhỏ bé, có sức mạnh kết nối con người. Chúng nhắc nhở chúng ta rằng, ở đâu đó, luôn có người quan tâm và trân trọng mình. Hãy dành thời gian để gửi đi một lời nhắn chân thành đến những người bạn yêu quý. Biết đâu, bạn sẽ là ánh sáng trong ngày của họ.</p>
+        `
+      },
+      {
+        image: "b2.jpg",
+        meta: "Đăng bởi Kỷ Niệm | 1 ngày trước",
+        title: "Yêu Thương Thầm Lặng",
+        content: `
+          <p>Đôi khi, tình yêu không cần phải nói ra thành lời. Nó nằm trong những hành động nhỏ, những ánh mắt lặng lẽ, và những khoảnh khắc ta dành cho nhau mà không cần lý do.</p>
+          <p>Tôi nhớ một buổi chiều lặng lẽ ngồi bên người ấy, chẳng nói gì nhiều, chỉ đơn giản là cùng nhau ngắm hoàng hôn. Không lời nào được thốt ra, nhưng tôi cảm nhận được sự ấm áp và bình yên mà chỉ tình yêu chân thành mới mang lại.</p>
+          <p>Yêu thương thầm lặng là khi bạn đặt hạnh phúc của người khác lên trên cả chính mình. Hãy trân trọng những khoảnh khắc ấy, vì chúng là những viên ngọc quý trong trái tim.</p>
+        `
+      },
+      {
+        image: "b3.jpg",
+        meta: "Đăng bởi Lãng Mạn | 1 ngày trước",
+        title: "Hoa Hồng Cho Em",
+        content: `
+          <p>Một bông hoa hồng không chỉ là một món quà, mà còn là lời thì thầm của trái tim. Nó nói lên những điều mà đôi khi lời nói không thể diễn tả.</p>
+          <p>Tôi vẫn nhớ ngày tôi tặng em bông hồng đầu tiên. Nụ cười của em lúc ấy như ánh nắng làm tan chảy mọi muộn phiền trong tôi. Chỉ một khoảnh khắc, nhưng nó đã trở thành ký ức không thể nào quên.</p>
+          <p>Hoa hồng là biểu tượng của tình yêu, nhưng chính những cảm xúc chân thành đằng sau nó mới làm nên ý nghĩa. Hãy dành tặng một bông hoa cho người bạn yêu, và để trái tim lên tiếng.</p>
+        `
+      }
+    ];
+
+    let currentBlogIndex = 0;
+
+    function nextBlog() {
+      const blogPost = document.getElementById('blogPost');
+      blogPost.classList.add('slide-out-left');
+      setTimeout(() => {
+        currentBlogIndex = (currentBlogIndex + 1) % blogPosts.length;
+        updateBlogPost();
+        blogPost.classList.remove('slide-out-left');
+        blogPost.classList.add('slide-in');
+        setTimeout(() => blogPost.classList.remove('slide-in'), 500);
+      }, 500);
+    }
+
+    function prevBlog() {
+      const blogPost = document.getElementById('blogPost');
+      blogPost.classList.add('slide-out-right');
+      setTimeout(() => {
+        currentBlogIndex = (currentBlogIndex - 1 + blogPosts.length) % blogPosts.length;
+        updateBlogPost();
+        blogPost.classList.remove('slide-out-right');
+        blogPost.classList.add('slide-in');
+        setTimeout(() => blogPost.classList.remove('slide-in'), 500);
+      }, 500);
+    }
+
+    function updateBlogPost() {
+      const post = blogPosts[currentBlogIndex];
+      document.querySelector('.blog-image').src = post.image;
+      document.getElementById('blogMeta').textContent = post.meta;
+      document.getElementById('blogTitle').textContent = post.title;
+      document.getElementById('blogContent').innerHTML = post.content;
+    }
+
+    function saveBlog() {
+      alert('Bài viết đã được lưu!');
+    }
+  </script>
+</body>
+</html>

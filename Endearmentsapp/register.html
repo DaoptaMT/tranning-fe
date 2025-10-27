@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Đăng Ký</title>
+  <style>
+    :root{
+      --default-color: #F6D8DC;
+        --heading-color: #FAE2E8;
+        --accent-color: #FAE2E8;
+        --dark-pink: #ef447a;
+        --light-pink: #FFF0F5;
+      --container-w: 360px;
+      --input-radius: 28px;
+    }
+    * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, var(--light-pink) 0%, var(--accent-color) 50%, #ffd1dc 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+body::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60%;
+        background: linear-gradient(to top, rgba(239, 68, 122, 0.15), transparent);
+        clip-path: path('M0,150 C300,250 600,50 900,150 C1200,250 1500,50 1800,150 L1920,0 H0 Z');
+        animation: wave 7s infinite ease-in-out;
+        z-index: 0;
+      }
+
+      body::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 70%;
+        background: linear-gradient(to top, rgba(250, 226, 232, 0.2), transparent);
+        clip-path: path('M0,180 C350,100 700,200 1050,150 C1400,100 1750,200 1920,150 L1920,0 H0 Z');
+        animation: wave 9s infinite ease-in-out reverse;
+        z-index: 0;
+      }
+
+      @keyframes wave {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+      }
+    .card{
+      width:100%;
+      max-width:var(--container-w);
+      text-align:center;
+      z-index:1;
+    }
+
+    h1{
+      font-size:24px;
+      margin-top:6px;
+      margin-bottom:18px;
+      font-weight:700;
+      color:#000;
+    }
+
+    /* avatar */
+    .avatar-wrap{
+      display:flex;
+      justify-content:center;
+      margin-bottom:14px;
+    }
+    .avatar{
+      width:120px;
+      height:120px;
+      border-radius:50%;
+      background: linear-gradient(180deg, rgba(239,68,122,0.08), rgba(255,255,255,0.6));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 6px 18px rgba(239,68,122,0.08);
+      margin: 0 auto 6px;
+    }
+    .avatar svg{ width:72px; height:72px; }
+    form {
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:stretch;
+      padding: 0 6px;
+    }
+    .input-pill{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      background: #fff;
+      border-radius: var(--input-radius);
+      padding:12px 16px;
+      border: 1px solid rgba(239,68,122,0.12);
+      box-shadow: 0 6px 18px rgba(239,68,122,0.03);
+    }
+    .input-pill input{
+      border:0;
+      outline:none;
+      font-size:15px;
+      flex:1;
+      background:transparent;
+    }
+    .icon{
+      width:20px;
+      height:20px;
+      flex:0 0 20px;
+      display:inline-block;
+    }
+    .eye-btn{
+      background:transparent;
+      border:0;
+      padding:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      flex:0 0 24px;
+    }
+    .btn-submit{
+      margin-top:6px;
+      background: linear-gradient(135deg, var(--dark-pink), #ff8aa0);
+      color:#fff;
+      border:0;
+      border-radius:28px;
+      padding:14px 16px;
+      font-size:18px;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow: 0 8px 20px rgba(239,68,122,0.18);
+    }
+    .btn-submit:active{ transform: translateY(1px); }
+    .policy{
+      margin-top:14px;
+      font-size:13px;
+      color:#3a3a3a;
+      line-height:1.3;
+      padding: 0 10px;
+    }
+    .policy a{ color:var(--dark-pink); text-decoration:none; font-weight:600; }
+
+    .spacer-small{ height:6px; }
+
+    @media (max-width:420px){
+      :root{ --container-w: calc(100% - 32px); }
+      .avatar{ width:100px; height:100px; }
+      .avatar svg{ width:60px; height:60px; }
+      h1{ font-size:20px; margin-bottom:12px; }
+      .btn-submit{ font-size:16px; padding:12px 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="title">
+    <div class="avatar-wrap" aria-hidden="true">
+      <div class="avatar" title="avatar">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#ffd9df" />
+              <stop offset="1" stop-color="#ff9fb0" />
+            </linearGradient>
+            <linearGradient id="g2" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#bfe7ff" />
+              <stop offset="1" stop-color="#79c8ff" />
+            </linearGradient>
+          </defs>
+          <circle cx="32" cy="32" r="30" fill="rgba(255,255,255,0.6)"/>
+          <circle cx="32" cy="22" r="10" fill="url(#g1)"/>
+          <path d="M17 50c0-8 8-14 15-14s15 6 15 14" fill="url(#g2)"/>
+        </svg>
+      </div>
+    </div>
+
+    <h1 id="title">Đăng Ký</h1>
+
+    <form id="regForm" action="#" method="post" novalidate>
+      <label class="input-pill" for="fullname">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" fill="#000" opacity="0.6"/>
+            <path d="M4 20a8 8 0 0 1 16 0" fill="#000" opacity="0.12"/>
+          </svg>
+        </span>
+        <input id="fullname" name="fullname" type="text" placeholder="Nhập tên của bạn" autocomplete="name" required />
+      </label>
+      <label class="input-pill" for="email">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="5" width="20" height="14" rx="2" fill="#000" opacity="0.06"/>
+            <path d="M3 7.5l9 6 9-6" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+          </svg>
+        </span>
+        <input id="email" name="email" type="email" placeholder="Nhập địa chỉ email" autocomplete="email" required />
+      </label>
+      <label class="input-pill" for="password" style="position:relative;">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="10" width="16" height="10" rx="2" fill="#000" opacity="0.06"/>
+            <path d="M7 10V8a5 5 0 0 1 10 0v2" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+          </svg>
+        </span>
+
+        <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" autocomplete="new-password" required />
+
+        <button type="button" class="eye-btn" id="togglePwd" aria-label="Hiển thị mật khẩu" title="Hiển thị/ẩn mật khẩu">
+          <svg id="eyeOpen" viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
+            <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" stroke="#333" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="3" stroke="#333" stroke-width="1.2"/>
+          </svg>
+          <svg id="eyeClosed" viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" stroke="#333" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+            <path d="M3 3l18 18" stroke="#333" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </label>
+
+      <button type="submit" class="btn-submit">Tiếp tục</button>
+       <p class="policy">
+        Đã có tài khoản <a href="login.html">Đăng nhập</a>
+       </p>
+      <p class="policy">
+        Bằng cách đăng kí bạn đồng ý với <a href="dieukhoan.html">điều khoản</a>, <a href="chinhsach.html">chính sách riêng tư</a> và sử dụng Cookie của chúng tôi
+      </p>
+    
+  </div>
+
+  <script>
+    (function(){
+      const pwd = document.getElementById('password');
+      const toggle = document.getElementById('togglePwd');
+      const eyeOpen = document.getElementById('eyeOpen');
+      const eyeClosed = document.getElementById('eyeClosed');
+
+      toggle.addEventListener('click', () => {
+        if (pwd.type === 'password') {
+          pwd.type = 'text';
+          eyeOpen.style.display = 'inline';
+          eyeClosed.style.display = 'none';
+          toggle.setAttribute('aria-label','Ẩn mật khẩu');
+          toggle.title = 'Ẩn mật khẩu';
+        } else {
+          pwd.type = 'password';
+          eyeOpen.style.display = 'none';
+          eyeClosed.style.display = 'inline';
+          toggle.setAttribute('aria-label','Hiển thị mật khẩu');
+          toggle.title = 'Hiển thị mật khẩu';
+        }
+      });
+      document.getElementById('regForm').addEventListener('submit', function(e){
+        const name = document.getElementById('fullname').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = pwd.value;
+        if (!name || !email || !password) {
+          e.preventDefault();
+          alert('Vui lòng điền đầy đủ tên, email và mật khẩu.');
+          return false;
+        }
+        const re = /\S+@\S+\.\S+/;
+        if (!re.test(email)) {
+          e.preventDefault();
+          alert('Vui lòng nhập email hợp lệ.');
+          return false;
+        }
+        if (password.length < 6) {
+          e.preventDefault();
+          alert('Mật khẩu cần ít nhất 6 ký tự.');
+          return false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
